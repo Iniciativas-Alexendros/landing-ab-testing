@@ -1,0 +1,48 @@
+// Esquema Prisma para el driver Postgres.
+//
+// INACTIVO hasta el PR final: el repository pattern usa el driver in-memory por
+// defecto (DB_DRIVER=memory). Cuando el Supabase autoalojado esté desplegado en
+// Coolify se generará el cliente y se implementará el driver `postgres`.
+//
+// Multi-instancia: una sola base Postgres aloja N landings vía `?schema=<cliente>`
+// en DATABASE_URL (esquema por cliente).
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["driverAdapters"]
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+enum Variant {
+  A
+  B
+}
+
+model Lead {
+  id        String   @id @default(uuid())
+  name      String
+  email     String
+  company   String?
+  message   String?
+  variant   Variant?
+  createdAt DateTime @default(now())
+
+  @@index([createdAt])
+  @@index([email])
+}
+
+model Event {
+  id        String   @id @default(uuid())
+  variant   Variant
+  action    String
+  meta      Json?
+  createdAt DateTime @default(now())
+
+  @@index([variant])
+  @@index([createdAt])
+}
