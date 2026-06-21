@@ -1,8 +1,9 @@
 import { Button } from "@landing/ui";
 
+import { ThemeToggle } from "@/components/theme-toggle";
 import { siteConfig } from "@/config/site.config";
 
-/** Cabecera fija con navegación y CTA. El toggle de tema se añade en la Fase 7. */
+/** Cabecera fija con navegación, conmutador de tema y CTA. */
 export function Header() {
   const { brand, nav } = siteConfig;
 
@@ -31,9 +32,12 @@ export function Header() {
           ))}
         </nav>
 
-        <Button asChild size="sm">
-          <a href="#lead-form">{nav.ctaLabel}</a>
-        </Button>
+        <div className="flex items-center gap-1">
+          <ThemeToggle />
+          <Button asChild size="sm">
+            <a href="#lead-form">{nav.ctaLabel}</a>
+          </Button>
+        </div>
       </div>
     </header>
   );
