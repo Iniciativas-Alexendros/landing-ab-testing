@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 
-import { repo } from "@/lib/db";
+import { getRepo } from "@/lib/db";
 import { rateLimit } from "@/lib/rate-limit";
 import { getClientIp, isSameOrigin } from "@/lib/request";
 import { trackEventSchema } from "@/lib/validation";
@@ -37,6 +37,6 @@ export async function POST(request: Request) {
     );
   }
 
-  const event = await repo.events.record(parsed.data);
+  const event = await getRepo().events.record(parsed.data);
   return NextResponse.json({ ok: true, id: event.id }, { status: 200 });
 }

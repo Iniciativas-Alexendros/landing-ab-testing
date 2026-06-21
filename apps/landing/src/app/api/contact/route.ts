@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 
-import { repo } from "@/lib/db";
+import { getRepo } from "@/lib/db";
 import { sendWelcomeEmail } from "@/lib/email";
 import { rateLimit } from "@/lib/rate-limit";
 import { getClientIp, isSameOrigin } from "@/lib/request";
@@ -43,7 +43,7 @@ export async function POST(request: Request) {
     );
   }
 
-  const lead = await repo.leads.create(parsed.data);
+  const lead = await getRepo().leads.create(parsed.data);
   await sendWelcomeEmail(lead);
 
   return NextResponse.json({ ok: true, id: lead.id }, { status: 201 });

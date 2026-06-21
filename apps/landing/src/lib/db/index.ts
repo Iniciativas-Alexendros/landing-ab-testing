@@ -15,23 +15,33 @@ function resolveDriver(): DbDriver {
 
 function createRepo(): AppRepo {
   const driver = resolveDriver();
-  switch (driver) {
-    case "memory":
-      return createMemoryRepo();
-    case "postgres":
-      // El driver Postgres (Prisma + adapter-pg) se cablea en el PR final,
-      // cuando el Supabase autoalojado esté desplegado en Coolify.
-      throw new Error(
-        "DB_DRIVER=postgres aún no está cableado. Usa DB_DRIVER=memory hasta que el servicio Postgres esté disponible.",
+
+  if (driver === "memory") {
+    if (process.env.NODE_ENV === "production") {
+      // El driver in-memory no persiste en serverless: aviso ruidoso, sin romper.
+      console.warn(
+        "[db] DB_DRIVER=memory en producción: los datos NO persisten entre instancias. Cablea Postgres.",
       );
+    }
+    return createMemoryRepo();
   }
+
+  // El driver Postgres (Prisma + adapter-pg) se cablea cuando el Supabase
+  // autoalojado esté desplegado. Ver docs/DESPLIEGUE.md.
+  throw new Error(
+    "DB_DRIVER=postgres aún no está cableado. Usa DB_DRIVER=memory hasta que el servicio Postgres esté disponible.",
+  );
 }
 
-// Singleton: en dev preserva el estado in-memory entre recargas de módulo (HMR).
+// Singleton perezoso: NO se instancia al importar el módulo (un DB_DRIVER mal
+// configurado ya no revienta la carga). Se crea en el primer acceso y se cachea
+// en globalThis para sobrevivir a recargas de módulo dentro de la misma instancia.
 const globalForRepo = globalThis as unknown as { __appRepo?: AppRepo };
 
-export const repo: AppRepo = globalForRepo.__appRepo ?? createRepo();
-
-if (process.env.NODE_ENV !== "production") {
-  globalForRepo.__appRepo = repo;
+/** Devuelve el repositorio de la aplicación (memoria por defecto). */
+export function getRepo(): AppRepo {
+  if (!globalForRepo.__appRepo) {
+    globalForRepo.__appRepo = createRepo();
+  }
+  return globalForRepo.__appRepo;
 }
