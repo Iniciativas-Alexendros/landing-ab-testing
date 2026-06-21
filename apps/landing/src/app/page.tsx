@@ -20,7 +20,7 @@ export default async function HomePage() {
         <Pricing />
         <Testimonials />
         <Faq />
-        <FinalCta />
+        <FinalCta variant={variant} />
       </main>
       <Footer />
     </>
