@@ -3,22 +3,24 @@ import type { Variant } from "@/lib/db";
 /**
  * Envía un evento de seguimiento A/B a la API (best-effort).
  *
- * Usa `keepalive` para no perder el evento si la navegación cambia justo
- * después del clic. Los errores se ignoran: el tracking nunca debe romper la UX.
+ * Prefiere `navigator.sendBeacon`: garantiza el envío aunque la navegación
+ * cambie justo tras el clic (el navegador lo entrega en segundo plano). Si no
+ * está disponible, cae a `fetch` con `keepalive`. El tracking nunca rompe la UX.
  */
-export async function trackEvent(
-  action: string,
-  variant: Variant,
-  meta?: Record<string, unknown>,
-): Promise<void> {
-  try {
-    await fetch("/api/track-event", {
-      method: "POST",
-      headers: { "content-type": "application/json" },
-      body: JSON.stringify({ action, variant, meta }),
-      keepalive: true,
-    });
-  } catch {
-    // best-effort: ignoramos fallos de red
+export function trackEvent(action: string, variant: Variant, meta?: Record<string, unknown>): void {
+  const payload = JSON.stringify({ action, variant, meta });
+
+  if (typeof navigator !== "undefined" && typeof navigator.sendBeacon === "function") {
+    const blob = new Blob([payload], { type: "application/json" });
+    if (navigator.sendBeacon("/api/track-event", blob)) return;
   }
+
+  void fetch("/api/track-event", {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: payload,
+    keepalive: true,
+  }).catch(() => {
+    // best-effort: ignoramos fallos de red
+  });
 }
