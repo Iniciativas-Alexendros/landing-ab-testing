@@ -41,3 +41,23 @@ jobs:
 
       - name: Build
         run: pnpm build
+
+  e2e:
+    runs-on: ${{ vars.CI_RUNNER && fromJSON(vars.CI_RUNNER) || 'ubuntu-latest' }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - name: Instalar navegador de Playwright
+        run: pnpm --filter @landing/web exec playwright install --with-deps chromium
+
+      - name: E2E (Playwright)
+        run: pnpm --filter @landing/web test:e2e
