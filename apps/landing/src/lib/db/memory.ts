@@ -7,7 +7,14 @@ import { type Event, type Lead, type Variant, VARIANTS } from "./types";
  * Driver por defecto (DB_DRIVER=memory) hasta cablear Postgres. Los datos viven
  * en el proceso: en serverless cada instancia tiene su propio estado y se pierde
  * al reciclarse. Suficiente para desarrollo, tests y demos; no para producción.
+ *
+ * Los almacenes están acotados (ring buffer) para que un abuso de los endpoints
+ * no agote la memoria. El conteo de eventos por variante se mantiene en un
+ * contador acumulado, de modo que las métricas de conversión sobreviven a la
+ * evicción de eventos antiguos.
  */
+const MAX_ITEMS = 5000;
+
 function createId(): string {
   return globalThis.crypto.randomUUID();
 }
@@ -26,6 +33,7 @@ class MemoryLeadRepo implements LeadRepo {
       createdAt: new Date(),
     };
     this.store.push(lead);
+    if (this.store.length > MAX_ITEMS) this.store.shift();
     return lead;
   }
 
@@ -36,6 +44,9 @@ class MemoryLeadRepo implements LeadRepo {
 
 class MemoryEventRepo implements EventRepo {
   private readonly store: Event[] = [];
+  private readonly totals: Record<Variant, number> = Object.fromEntries(
+    VARIANTS.map((v) => [v, 0]),
+  ) as Record<Variant, number>;
 
   async record(input: Parameters<EventRepo["record"]>[0]): Promise<Event> {
     const event: Event = {
@@ -46,6 +57,8 @@ class MemoryEventRepo implements EventRepo {
       createdAt: new Date(),
     };
     this.store.push(event);
+    if (this.store.length > MAX_ITEMS) this.store.shift();
+    this.totals[event.variant] += 1;
     return event;
   }
 
@@ -54,11 +67,7 @@ class MemoryEventRepo implements EventRepo {
   }
 
   async countByVariant(): Promise<Record<Variant, number>> {
-    const counts = Object.fromEntries(VARIANTS.map((v) => [v, 0])) as Record<Variant, number>;
-    for (const event of this.store) {
-      counts[event.variant] += 1;
-    }
-    return counts;
+    return { ...this.totals };
   }
 }
 
