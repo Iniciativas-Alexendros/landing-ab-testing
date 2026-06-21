@@ -21,6 +21,10 @@ export const leadSchema = z.object({
 
 export type LeadFormValues = z.infer<typeof leadSchema>;
 
+/** Límites del campo `meta` para evitar payloads abusivos (DoS de memoria). */
+const META_MAX_KEYS = 20;
+const META_MAX_BYTES = 2048;
+
 /** Esquema del payload de seguimiento de eventos A/B. */
 export const trackEventSchema = z.object({
   variant: z.enum(VARIANTS),
@@ -29,7 +33,13 @@ export const trackEventSchema = z.object({
     .trim()
     .min(1, "La acción es obligatoria")
     .max(64, "La acción es demasiado larga"),
-  meta: z.record(z.unknown()).optional(),
+  meta: z
+    .record(z.unknown())
+    .refine(
+      (m) => Object.keys(m).length <= META_MAX_KEYS && JSON.stringify(m).length <= META_MAX_BYTES,
+      `meta no puede superar ${META_MAX_KEYS} claves ni ${META_MAX_BYTES} bytes`,
+    )
+    .optional(),
 });
 
 export type TrackEventValues = z.infer<typeof trackEventSchema>;
