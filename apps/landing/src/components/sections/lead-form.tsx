@@ -1,5 +1,6 @@
 "use client";
 
+import { useRef } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
@@ -26,11 +27,14 @@ export function LeadForm({ variant }: LeadFormProps) {
     defaultValues: { variant },
   });
 
+  // Honeypot: campo oculto que solo rellenan los bots.
+  const honeypotRef = useRef<HTMLInputElement>(null);
+
   async function onSubmit(values: LeadFormValues) {
     const res = await fetch("/api/contact", {
       method: "POST",
       headers: { "content-type": "application/json" },
-      body: JSON.stringify({ ...values, variant }),
+      body: JSON.stringify({ ...values, variant, website: honeypotRef.current?.value ?? "" }),
     });
 
     if (!res.ok) {
@@ -44,6 +48,16 @@ export function LeadForm({ variant }: LeadFormProps) {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} noValidate className="mx-auto max-w-md text-left">
+      {/* Honeypot anti-bots: oculto para humanos y lectores de pantalla. */}
+      <input
+        ref={honeypotRef}
+        type="text"
+        name="website"
+        tabIndex={-1}
+        autoComplete="off"
+        aria-hidden="true"
+        className="absolute left-[-9999px] h-0 w-0 opacity-0"
+      />
       <div className="grid gap-4">
         <div className="grid gap-1.5">
           <Label htmlFor="name">Nombre</Label>

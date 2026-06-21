@@ -1,10 +1,27 @@
 import { NextResponse } from "next/server";
 
 import { repo } from "@/lib/db";
+import { rateLimit } from "@/lib/rate-limit";
+import { getClientIp, isSameOrigin } from "@/lib/request";
 import { trackEventSchema } from "@/lib/validation";
+
+const LIMIT = 30;
+const WINDOW_MS = 60_000;
 
 /** Registra un evento de seguimiento del test A/B (variante + acción). */
 export async function POST(request: Request) {
+  if (!isSameOrigin(request)) {
+    return NextResponse.json({ error: "Origen no permitido" }, { status: 403 });
+  }
+
+  const limit = rateLimit(`track:${getClientIp(request)}`, LIMIT, WINDOW_MS);
+  if (!limit.ok) {
+    return NextResponse.json(
+      { error: "Demasiadas peticiones" },
+      { status: 429, headers: { "retry-after": String(limit.retryAfterSeconds) } },
+    );
+  }
+
   let body: unknown;
   try {
     body = await request.json();

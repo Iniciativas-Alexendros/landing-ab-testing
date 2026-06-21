@@ -18,6 +18,7 @@ export function middleware(request: NextRequest) {
       path: "/",
       maxAge: AB_COOKIE_MAX_AGE,
       sameSite: "lax",
+      secure: process.env.NODE_ENV === "production",
     });
   }
 
