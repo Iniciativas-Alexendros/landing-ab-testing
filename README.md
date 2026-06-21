@@ -39,7 +39,9 @@ pnpm --filter @landing/web test:e2e   # end-to-end (Playwright)
 pnpm build
 ```
 
-Copia `apps/landing/.env.example` a `apps/landing/.env.local` y ajusta lo necesario. Sin variables, la app funciona con el driver de datos in-memory y el email simulado por consola.
+Copia `apps/landing/.env.example` a `apps/landing/.env.local` y ajusta lo necesario. Sin variables, la app arranca con el driver de datos **in-memory** y el email simulado por consola.
+
+> ⚠️ **El driver `memory` NO es apto para producción.** En un entorno serverless (Vercel) cada instancia tiene su propia memoria y el estado se pierde entre invocaciones: los leads y eventos **no persisten**. Es solo para desarrollo, tests y demos. Para producción hay que cablear Postgres (ver despliegue).
 
 ## Reutilizar para otro cliente
 
@@ -51,4 +53,4 @@ Ver **[docs/DESPLIEGUE.md](docs/DESPLIEGUE.md)** para el despliegue en Vercel (E
 
 ## Flujo de trabajo
 
-`main` protegida (PR obligatorio, CI verde, historia lineal). Cada fase entró por un PR (`feat/faseN-*`). El histórico de PRs documenta la construcción fase a fase.
+`main` protegida: **PR obligatorio**, **status checks (`quality` + `e2e`) verdes requeridos**, historia lineal, sin force-push, reglas aplicadas también a administradores. Convenciones en [CONTRIBUTING.md](CONTRIBUTING.md). Cambios notables en [CHANGELOG.md](CHANGELOG.md); seguridad en [SECURITY.md](SECURITY.md).
