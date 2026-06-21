@@ -1,0 +1,13 @@
+# CODEOWNERS · landing-ab-testing
+# https://docs.github.com/articles/about-code-owners
+
+# Propietario por defecto de todo el repositorio
+*                       @Alexendros
+
+# Documentos y configuración críticos
+/SECURITY.md            @Alexendros
+/LICENSE                @Alexendros
+/.github/               @Alexendros
+/apps/landing/next.config.ts   @Alexendros
+/apps/landing/src/middleware.ts @Alexendros
+/apps/landing/src/lib/          @Alexendros
