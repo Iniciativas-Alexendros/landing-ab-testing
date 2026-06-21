@@ -9,3 +9,9 @@ export {
   CardContent,
   CardFooter,
 } from "./components/card";
+export {
+  Accordion,
+  AccordionItem,
+  AccordionTrigger,
+  AccordionContent,
+} from "./components/accordion";
