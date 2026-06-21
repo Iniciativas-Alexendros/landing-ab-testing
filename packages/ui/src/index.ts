@@ -15,3 +15,6 @@ export {
   AccordionTrigger,
   AccordionContent,
 } from "./components/accordion";
+export { Input } from "./components/input";
+export { Textarea } from "./components/textarea";
+export { Label } from "./components/label";
