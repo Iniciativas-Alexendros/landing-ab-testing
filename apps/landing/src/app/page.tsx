@@ -1,8 +1,9 @@
-import { Button } from "@landing/ui";
-
+import { AbCtaButton } from "@/components/ab/ab-cta-button";
 import { siteConfig } from "@/config/site.config";
+import { getServerVariant } from "@/lib/ab/server";
 
-export default function HomePage() {
+export default async function HomePage() {
+  const variant = await getServerVariant();
   const { brand, hero } = siteConfig;
 
   return (
@@ -14,7 +15,12 @@ export default function HomePage() {
       ) : null}
       <h1 className="text-4xl font-bold tracking-tight sm:text-5xl">{hero.title}</h1>
       <p className="max-w-prose text-muted-foreground">{hero.subtitle}</p>
-      <Button>{hero.ctaVariants.A}</Button>
+      <AbCtaButton
+        abVariant={variant}
+        labelA={hero.ctaVariants.A}
+        labelB={hero.ctaVariants.B}
+        size="lg"
+      />
       <dl className="mt-4 flex flex-wrap justify-center gap-8">
         {hero.stats.map((stat) => (
           <div key={stat.label} className="flex flex-col">
@@ -27,7 +33,7 @@ export default function HomePage() {
         ))}
       </dl>
       <p className="mt-8 text-xs text-muted-foreground">
-        Contenido de <strong>{brand.name}</strong> · las secciones llegan en el siguiente PR.
+        Contenido de <strong>{brand.name}</strong> · variante activa: <strong>{variant}</strong>
       </p>
     </main>
   );
