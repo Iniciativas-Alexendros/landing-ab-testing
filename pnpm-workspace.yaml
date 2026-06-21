@@ -1,0 +1,13 @@
+packages:
+  - "apps/*"
+  - "packages/*"
+
+# Builds nativos permitidos (deps con scripts de compilación)
+allowBuilds:
+  sharp: true
+  unrs-resolver: true
+  "@tailwindcss/oxide": true
+  "@prisma/engines": true
+  prisma: true
+  "@prisma/client": true
+  esbuild: true
