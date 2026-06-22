@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { useInView, useReducedMotion } from "framer-motion";
+
+import { useReducedMotion } from "./use-reduced-motion";
 
 interface AnimatedCounterProps {
   /** Valor final al que cuenta. */
@@ -14,9 +15,25 @@ interface AnimatedCounterProps {
 /** Cuenta de 0 al valor final cuando entra en el viewport (una vez). */
 export function AnimatedCounter({ value, durationMs = 1400, className }: AnimatedCounterProps) {
   const ref = useRef<HTMLSpanElement>(null);
-  const inView = useInView(ref, { once: true, margin: "-40px" });
   const reduce = useReducedMotion();
+  const [inView, setInView] = useState(false);
   const [display, setDisplay] = useState(0);
+
+  useEffect(() => {
+    const element = ref.current;
+    if (!element) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0]?.isIntersecting) {
+          setInView(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: "-40px" },
+    );
+    observer.observe(element);
+    return () => observer.disconnect();
+  }, []);
 
   useEffect(() => {
     if (!inView) return;

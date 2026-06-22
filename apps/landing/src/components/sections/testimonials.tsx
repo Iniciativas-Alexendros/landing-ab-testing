@@ -2,12 +2,12 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { ChevronLeft, ChevronRight, Pause, Play, Quote } from "lucide-react";
-import { useReducedMotion } from "framer-motion";
 import Autoplay from "embla-carousel-autoplay";
 import useEmblaCarousel from "embla-carousel-react";
 
 import { Card, CardContent, cn } from "@landing/ui";
 
+import { useReducedMotion } from "@/components/motion/use-reduced-motion";
 import { siteConfig } from "@/config/site.config";
 
 export function Testimonials() {

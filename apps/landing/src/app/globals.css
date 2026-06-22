@@ -123,6 +123,22 @@
   }
 }
 
+/* Pulso que recorre las conexiones del FlowDiagram (signature). */
+@keyframes flow-pulse {
+  0% {
+    top: 0;
+    opacity: 0;
+  }
+  20%,
+  80% {
+    opacity: 1;
+  }
+  100% {
+    top: 100%;
+    opacity: 0;
+  }
+}
+
 @layer base {
   * {
     border-color: var(--color-border);
