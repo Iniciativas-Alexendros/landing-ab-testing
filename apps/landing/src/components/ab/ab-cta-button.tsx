@@ -14,23 +14,32 @@ interface AbCtaButtonProps extends ButtonProps {
   labelB: string;
   /** Nombre de la acción registrada al hacer clic. */
   action?: string;
+  /** Id del elemento destino al que desplazarse al hacer clic (p. ej. "lead-form"). */
+  targetId?: string;
 }
 
 /**
- * CTA con test A/B: muestra el texto de la variante activa y registra el clic.
+ * CTA con test A/B: muestra el texto de la variante activa, registra el clic y
+ * lleva al usuario a la sección destino (el formulario), cerrando el embudo.
  */
 export function AbCtaButton({
   abVariant,
   labelA,
   labelB,
   action = "cta_click",
+  targetId,
   onClick,
+  type = "button",
   ...props
 }: AbCtaButtonProps) {
   return (
     <Button
+      type={type}
       onClick={(event) => {
-        void trackEvent(action, abVariant);
+        trackEvent(action, abVariant);
+        if (targetId) {
+          document.getElementById(targetId)?.scrollIntoView({ behavior: "smooth" });
+        }
         onClick?.(event);
       }}
       {...props}

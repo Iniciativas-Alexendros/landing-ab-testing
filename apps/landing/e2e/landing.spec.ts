@@ -24,11 +24,11 @@ test.describe("Landing A/B", () => {
   }) => {
     await page.goto("/");
 
-    // El CTA del hero es la primera llamada a la acción de la página.
+    // El CTA del hero debe llevar al formulario (cierra el embudo de conversión).
     await page.locator("main button").first().click();
+    await expect(page.locator("#lead-form")).toBeInViewport({ timeout: 5000 });
 
     // Formulario de leads (en la sección final).
-    await page.locator("#lead-form").scrollIntoViewIfNeeded();
     await page.getByLabel("Nombre").fill("Ada Lovelace");
     await page.getByLabel("Email").fill("ada@example.com");
     await page.getByRole("button", { name: /crear cuenta gratis/i }).click();

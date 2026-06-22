@@ -42,6 +42,7 @@ export function Hero({ variant }: HeroProps) {
               abVariant={variant}
               labelA={hero.ctaVariants.A}
               labelB={hero.ctaVariants.B}
+              targetId="lead-form"
               size="lg"
             />
             {hero.secondaryCtaLabel ? (
