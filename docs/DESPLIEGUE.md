@@ -2,10 +2,12 @@
 
 ## Vercel (monorepo)
 
-El repositorio incluye `vercel.json` con la configuración del monorepo. En el dashboard de Vercel:
+Desplegado en producción: **https://landing-ab-testing.vercel.app** (equipo `alexendros-team`, sin dominio propio).
+
+Configuración del proyecto en Vercel:
 
 1. **Importa** el repo `Iniciativas-Alexendros/landing-ab-testing`.
-2. **Root Directory**: la raíz del repo (déjala por defecto). `vercel.json` ya define `installCommand`, `buildCommand` (filtrado a `@landing/web`) y `outputDirectory` (`apps/landing/.next`), de modo que el install resuelve los workspaces desde la raíz.
+2. **Root Directory**: `apps/landing` — **imprescindible**: Vercel detecta Next.js en el `package.json` de la Root Directory, y `next` vive en `apps/landing`, no en la raíz del monorepo. Con esto, install (workspace pnpm), build (`next build`) y output (`.next`) usan los valores por defecto; no hace falta `vercel.json`. Vercel resuelve `packages/ui` automáticamente al detectar el workspace pnpm/Turborepo.
 3. Framework: Next.js (autodetectado).
 4. **Variables de entorno** (Settings → Environment Variables):
 
