@@ -44,7 +44,7 @@ export function AbCtaButton({
       }}
       {...props}
     >
-      <ABTestWrapper variant={abVariant} a={labelA} b={labelB} />
+      <ABTestWrapper variant={abVariant} variantA={labelA} variantB={labelB} />
     </Button>
   );
 }

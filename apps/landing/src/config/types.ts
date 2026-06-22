@@ -46,8 +46,6 @@ export interface HeroConfig {
   ctaHref: string;
   secondaryCtaLabel?: string;
   secondaryCtaHref?: string;
-  /** Ruta a un vídeo de fondo opcional (relativa a /public). */
-  backgroundVideo?: string;
   stats: HeroStat[];
 }
 
@@ -88,8 +86,6 @@ export interface Testimonial {
   quote: string;
   author: string;
   role: string;
-  /** Ruta al avatar (relativa a /public). */
-  avatar?: string;
 }
 
 export interface TestimonialsConfig {
