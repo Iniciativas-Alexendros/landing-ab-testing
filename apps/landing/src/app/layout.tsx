@@ -25,23 +25,29 @@ const mono = JetBrains_Mono({
   variable: "--font-mono",
 });
 
+// En Vercel sin dominio propio, usa la URL de producción del deploy para que
+// las imágenes OG (absolutas) resuelvan; si no, la URL configurada del cliente.
+const metadataBaseUrl = process.env.VERCEL_PROJECT_PRODUCTION_URL
+  ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+  : siteConfig.seo.url;
+
 export const metadata: Metadata = {
   title: siteConfig.seo.title,
   description: siteConfig.seo.description,
-  metadataBase: new URL(siteConfig.seo.url),
+  metadataBase: new URL(metadataBaseUrl),
+  // Las imágenes Open Graph / Twitter las genera Next automáticamente desde
+  // app/opengraph-image.tsx y app/twitter-image.tsx (no se referencian aquí).
   openGraph: {
     title: siteConfig.seo.title,
     description: siteConfig.seo.description,
     url: siteConfig.seo.url,
     siteName: siteConfig.brand.name,
     type: "website",
-    images: siteConfig.seo.ogImage ? [{ url: siteConfig.seo.ogImage }] : undefined,
   },
   twitter: {
     card: "summary_large_image",
     title: siteConfig.seo.title,
     description: siteConfig.seo.description,
-    images: siteConfig.seo.ogImage ? [siteConfig.seo.ogImage] : undefined,
   },
 };
 

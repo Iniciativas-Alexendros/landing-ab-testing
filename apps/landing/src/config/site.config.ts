@@ -20,7 +20,6 @@ export const siteConfig: SiteConfig = {
     description:
       "La plataforma todo-en-uno para automatizar flujos de trabajo, captar clientes y crecer. Empieza gratis en minutos.",
     url: "https://nimbus.example",
-    ogImage: "/og.png",
   },
 
   nav: {
