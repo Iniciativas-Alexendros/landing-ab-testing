@@ -37,7 +37,7 @@ export function Hero({ variant }: HeroProps) {
 
           <p className="mt-6 max-w-xl text-lg text-muted-foreground">{hero.subtitle}</p>
 
-          <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+          <div className="mt-8 flex flex-col gap-4 sm:flex-row">
             <AbCtaButton
               abVariant={variant}
               labelA={hero.ctaVariants.A}
