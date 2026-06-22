@@ -68,7 +68,7 @@ export function Pricing() {
                   )}
                 >
                   {plan.highlighted ? (
-                    <Badge className="absolute -top-3 left-6">Más popular</Badge>
+                    <Badge className="absolute -top-3 left-1/2 -translate-x-1/2">Más popular</Badge>
                   ) : null}
                   <CardHeader>
                     <p className="font-display text-lg font-semibold">{plan.name}</p>
