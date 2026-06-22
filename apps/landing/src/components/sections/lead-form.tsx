@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef } from "react";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
@@ -16,10 +17,10 @@ interface LeadFormProps {
 
 /** Formulario de captura de leads con validación en vivo y feedback por toast. */
 export function LeadForm({ variant }: LeadFormProps) {
+  const router = useRouter();
   const {
     register,
     handleSubmit,
-    reset,
     formState: { errors, isSubmitting },
   } = useForm<LeadFormValues>({
     resolver: zodResolver(leadSchema),
@@ -42,8 +43,8 @@ export function LeadForm({ variant }: LeadFormProps) {
       return;
     }
 
-    toast.success("¡Gracias! Te hemos enviado un email de bienvenida.");
-    reset({ name: "", email: "", company: "", message: "", variant });
+    // Éxito: lleva a la página de agradecimiento (cierra el embudo).
+    router.push("/gracias");
   }
 
   return (

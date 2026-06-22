@@ -14,7 +14,7 @@ export default async function HomePage() {
   return (
     <>
       <Header />
-      <main>
+      <main id="contenido">
         <Hero variant={variant} />
         <Features />
         <Pricing />
