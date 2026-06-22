@@ -35,6 +35,13 @@ export const metadata: Metadata = {
     url: siteConfig.seo.url,
     siteName: siteConfig.brand.name,
     type: "website",
+    images: siteConfig.seo.ogImage ? [{ url: siteConfig.seo.ogImage }] : undefined,
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: siteConfig.seo.title,
+    description: siteConfig.seo.description,
+    images: siteConfig.seo.ogImage ? [siteConfig.seo.ogImage] : undefined,
   },
 };
 

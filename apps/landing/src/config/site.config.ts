@@ -45,7 +45,6 @@ export const siteConfig: SiteConfig = {
     ctaHref: "#lead-form",
     secondaryCtaLabel: "Ver cómo funciona",
     secondaryCtaHref: "#features",
-    backgroundVideo: undefined,
     stats: [
       { value: 12000, suffix: "+", label: "Equipos activos" },
       { value: 4, suffix: "M", label: "Tareas automatizadas" },

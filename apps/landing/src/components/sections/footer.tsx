@@ -1,21 +1,14 @@
+import { Logo } from "@/components/logo";
 import { siteConfig } from "@/config/site.config";
 
 export function Footer() {
-  const { brand, footer } = siteConfig;
+  const { footer } = siteConfig;
 
   return (
     <footer className="border-t bg-muted/30">
       <div className="mx-auto flex max-w-6xl flex-col gap-8 px-6 py-12 md:flex-row md:items-start md:justify-between">
         <div className="max-w-sm">
-          <p className="flex items-center gap-2 font-display text-lg font-bold">
-            <span
-              aria-hidden="true"
-              className="grid h-7 w-7 place-items-center rounded-md bg-brand text-brand-foreground"
-            >
-              ◇
-            </span>
-            {brand.name}
-          </p>
+          <Logo />
           <p className="mt-3 text-sm text-muted-foreground">{footer.tagline}</p>
         </div>
 

@@ -5,9 +5,9 @@ import type { Variant } from "@/lib/db";
 interface ABTestWrapperProps {
   variant: Variant;
   /** Contenido a renderizar para la variante A. */
-  a: ReactNode;
+  variantA: ReactNode;
   /** Contenido a renderizar para la variante B. */
-  b: ReactNode;
+  variantB: ReactNode;
 }
 
 /**
@@ -16,6 +16,6 @@ interface ABTestWrapperProps {
  * Presentacional y puro: la variante se resuelve en el servidor (middleware +
  * cookie/Edge Config) y se pasa como prop, evitando parpadeo en el cliente.
  */
-export function ABTestWrapper({ variant, a, b }: ABTestWrapperProps) {
-  return <>{variant === "A" ? a : b}</>;
+export function ABTestWrapper({ variant, variantA, variantB }: ABTestWrapperProps) {
+  return <>{variant === "A" ? variantA : variantB}</>;
 }
