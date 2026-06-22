@@ -4,9 +4,10 @@ import { cleanup, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
-import { toast } from "sonner";
-
 import { LeadForm } from "./lead-form";
+
+const push = vi.fn();
+vi.mock("next/navigation", () => ({ useRouter: () => ({ push }) }));
 
 vi.mock("sonner", () => ({
   toast: { success: vi.fn(), error: vi.fn() },
@@ -29,14 +30,13 @@ describe("LeadForm", () => {
     expect(await screen.findByText(/email válido/i)).toBeInTheDocument();
   });
 
-  it("envía el lead y resetea con datos válidos", async () => {
+  it("envía el lead y redirige a /gracias con datos válidos", async () => {
     const fetchMock = vi.fn().mockResolvedValue({ ok: true });
     vi.stubGlobal("fetch", fetchMock);
     const user = userEvent.setup();
 
     render(<LeadForm variant="B" />);
-    const name = screen.getByLabelText("Nombre");
-    await user.type(name, "Ada Lovelace");
+    await user.type(screen.getByLabelText("Nombre"), "Ada Lovelace");
     await user.type(screen.getByLabelText("Email"), "ada@example.com");
     await user.click(screen.getByRole("button", { name: /crear cuenta/i }));
 
@@ -46,7 +46,7 @@ describe("LeadForm", () => {
     const payload = JSON.parse((init as RequestInit).body as string);
     expect(payload).toMatchObject({ email: "ada@example.com", variant: "B" });
 
-    // Camino de éxito: toast de confirmación (el reset visual se verifica en E2E).
-    await waitFor(() => expect(toast.success).toHaveBeenCalled());
+    // Camino de éxito: navega a la página de agradecimiento.
+    await waitFor(() => expect(push).toHaveBeenCalledWith("/gracias"));
   });
 });

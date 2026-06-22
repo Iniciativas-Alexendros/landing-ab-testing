@@ -33,10 +33,9 @@ test.describe("Landing A/B", () => {
     await page.getByLabel("Email").fill("ada@example.com");
     await page.getByRole("button", { name: /crear cuenta gratis/i }).click();
 
-    // Toast de confirmación.
-    await expect(page.getByText(/te hemos enviado un email/i)).toBeVisible();
-    // El formulario se limpia tras el envío (DEFECTO-036).
-    await expect(page.getByLabel("Nombre")).toHaveValue("");
+    // Éxito: redirige a la página de agradecimiento.
+    await expect(page).toHaveURL(/\/gracias$/);
+    await expect(page.getByRole("heading", { name: /gracias por registrarte/i })).toBeVisible();
   });
 
   test("el carrusel de testimonios se puede pausar (WCAG 2.2.2)", async ({ page }) => {

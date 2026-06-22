@@ -69,6 +69,12 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
+          <a
+            href="#contenido"
+            className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-md focus:border focus:bg-background focus:px-4 focus:py-2 focus:text-sm focus:font-medium focus:shadow-lg"
+          >
+            Saltar al contenido
+          </a>
           {children}
           <Toaster richColors position="top-center" theme="system" />
         </ThemeProvider>
