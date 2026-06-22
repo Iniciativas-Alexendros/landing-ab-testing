@@ -43,7 +43,7 @@ export function LeadForm({ variant }: LeadFormProps) {
     }
 
     toast.success("¡Gracias! Te hemos enviado un email de bienvenida.");
-    reset({ variant });
+    reset({ name: "", email: "", company: "", message: "", variant });
   }
 
   return (

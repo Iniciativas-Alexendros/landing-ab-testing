@@ -9,6 +9,12 @@ export default defineConfig({
     alias: { "@": path.resolve(import.meta.dirname, "./src") },
   },
   test: {
+    coverage: {
+      provider: "v8",
+      include: ["src/lib/**/*.ts", "src/components/ab/**/*.tsx"],
+      exclude: ["**/*.{test,spec}.*", "src/lib/db/types.ts"],
+      thresholds: { statements: 85, lines: 85, functions: 90, branches: 75 },
+    },
     projects: [
       {
         extends: true,
