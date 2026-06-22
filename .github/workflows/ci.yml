@@ -15,7 +15,7 @@ jobs:
     # Runner self-hosted de la org con fallback a github-hosted.
     runs-on: ${{ vars.CI_RUNNER && fromJSON(vars.CI_RUNNER) || 'ubuntu-latest' }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       # La versión de pnpm se toma de "packageManager" en package.json.
       - uses: pnpm/action-setup@v4
@@ -48,7 +48,7 @@ jobs:
   e2e:
     runs-on: ${{ vars.CI_RUNNER && fromJSON(vars.CI_RUNNER) || 'ubuntu-latest' }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - uses: pnpm/action-setup@v4
 
