@@ -1,7 +1,8 @@
 "use client";
 
-import type { ReactNode } from "react";
-import { motion, useReducedMotion } from "framer-motion";
+import { type ReactNode, useEffect, useRef, useState } from "react";
+
+import { cn } from "@landing/ui";
 
 interface FadeInWhenVisibleProps {
   children: ReactNode;
@@ -11,25 +12,42 @@ interface FadeInWhenVisibleProps {
 }
 
 /**
- * Revela su contenido con un fundido + desplazamiento al entrar en el viewport.
- * Si el usuario prefiere reducir movimiento, aparece sin animación.
+ * Revela su contenido con un fundido + desplazamiento al entrar en el viewport,
+ * usando IntersectionObserver + transiciones CSS (sin dependencias de animación).
+ * Con `prefers-reduced-motion` el contenido aparece sin animación (vía
+ * `motion-safe:`), por lo que nunca queda oculto.
  */
 export function FadeInWhenVisible({ children, delay = 0, className }: FadeInWhenVisibleProps) {
-  const reduce = useReducedMotion();
+  const ref = useRef<HTMLDivElement>(null);
+  const [visible, setVisible] = useState(false);
 
-  if (reduce) {
-    return <div className={className}>{children}</div>;
-  }
+  useEffect(() => {
+    const element = ref.current;
+    if (!element) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0]?.isIntersecting) {
+          setVisible(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: "-80px" },
+    );
+    observer.observe(element);
+    return () => observer.disconnect();
+  }, []);
 
   return (
-    <motion.div
-      className={className}
-      initial={{ opacity: 0, y: 24 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-80px" }}
-      transition={{ duration: 0.5, delay, ease: [0.22, 1, 0.36, 1] }}
+    <div
+      ref={ref}
+      className={cn(
+        "motion-safe:translate-y-6 motion-safe:opacity-0 motion-safe:transition-all motion-safe:duration-500 motion-safe:ease-out",
+        visible && "motion-safe:translate-y-0 motion-safe:opacity-100",
+        className,
+      )}
+      style={visible ? { transitionDelay: `${delay}s` } : undefined}
     >
       {children}
-    </motion.div>
+    </div>
   );
 }
