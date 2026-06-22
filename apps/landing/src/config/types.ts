@@ -24,8 +24,6 @@ export interface SeoConfig {
   description: string;
   /** URL canónica absoluta. */
   url: string;
-  /** Ruta a la imagen Open Graph (relativa a /public). */
-  ogImage?: string;
 }
 
 export interface HeroStat {
