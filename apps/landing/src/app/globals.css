@@ -146,12 +146,16 @@
   }
 }
 
+/* Reduce el movimiento real (animaciones, scroll suave) sin anular las
+   transiciones cortas de color/opacidad que ayudan a la usabilidad (foco, hover). */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
   *::after {
     animation-duration: 0.001ms !important;
     animation-iteration-count: 1 !important;
-    transition-duration: 0.001ms !important;
+  }
+  html {
+    scroll-behavior: auto !important;
   }
 }

@@ -75,8 +75,7 @@ export function Pricing() {
                     <p className="text-sm text-muted-foreground">{plan.description}</p>
                     <div className="mt-4 flex items-baseline gap-1">
                       <span className="font-display text-4xl font-bold tabular-nums">
-                        {pricing.currency}
-                        {price}
+                        {price.toLocaleString("es-ES")} {pricing.currency}
                       </span>
                       <span className="text-sm text-muted-foreground">/mes</span>
                     </div>

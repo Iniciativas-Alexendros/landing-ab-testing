@@ -36,4 +36,13 @@ test.describe("Landing A/B", () => {
     // Toast de confirmación.
     await expect(page.getByText(/te hemos enviado un email/i)).toBeVisible();
   });
+
+  test("el carrusel de testimonios se puede pausar (WCAG 2.2.2)", async ({ page }) => {
+    await page.goto("/");
+    const pause = page.getByRole("button", { name: /pausar testimonios/i });
+    await pause.scrollIntoViewIfNeeded();
+    await expect(pause).toBeVisible();
+    await pause.click();
+    await expect(page.getByRole("button", { name: /reanudar testimonios/i })).toBeVisible();
+  });
 });
