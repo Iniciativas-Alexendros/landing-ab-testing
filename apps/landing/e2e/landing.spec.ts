@@ -35,6 +35,8 @@ test.describe("Landing A/B", () => {
 
     // Toast de confirmación.
     await expect(page.getByText(/te hemos enviado un email/i)).toBeVisible();
+    // El formulario se limpia tras el envío (DEFECTO-036).
+    await expect(page.getByLabel("Nombre")).toHaveValue("");
   });
 
   test("el carrusel de testimonios se puede pausar (WCAG 2.2.2)", async ({ page }) => {

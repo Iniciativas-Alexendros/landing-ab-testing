@@ -39,6 +39,9 @@ jobs:
       - name: Test
         run: pnpm test
 
+      - name: Cobertura (umbrales)
+        run: pnpm --filter @landing/web test:coverage
+
       - name: Build
         run: pnpm build
 
