@@ -1,7 +1,8 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
-import { ChevronLeft, ChevronRight, Quote } from "lucide-react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { ChevronLeft, ChevronRight, Pause, Play, Quote } from "lucide-react";
+import { useReducedMotion } from "framer-motion";
 import Autoplay from "embla-carousel-autoplay";
 import useEmblaCarousel from "embla-carousel-react";
 
@@ -11,10 +12,15 @@ import { siteConfig } from "@/config/site.config";
 
 export function Testimonials() {
   const { testimonials } = siteConfig;
-  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true, align: "start" }, [
-    Autoplay({ delay: 3000, stopOnInteraction: false, stopOnMouseEnter: true }),
-  ]);
+  const reduce = useReducedMotion() ?? false;
+
+  // No arranca solo si el usuario pidió reducir movimiento (WCAG 2.3.3 / 2.2.2).
+  // El control de pausa es explícito (botón), no por hover, para que sea
+  // determinista y operable por teclado.
+  const autoplay = useRef(Autoplay({ delay: 3000, stopOnInteraction: false, playOnInit: !reduce }));
+  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true, align: "start" }, [autoplay.current]);
   const [selected, setSelected] = useState(0);
+  const [isPlaying, setIsPlaying] = useState(!reduce);
 
   const onSelect = useCallback(() => {
     if (emblaApi) setSelected(emblaApi.selectedScrollSnap());
@@ -29,6 +35,18 @@ export function Testimonials() {
     };
   }, [emblaApi, onSelect]);
 
+  const toggleAutoplay = useCallback(() => {
+    const ap = emblaApi?.plugins().autoplay;
+    if (!ap) return;
+    if (ap.isPlaying()) {
+      ap.stop();
+      setIsPlaying(false);
+    } else {
+      ap.play();
+      setIsPlaying(true);
+    }
+  }, [emblaApi]);
+
   return (
     <section id="testimonials" className="border-t bg-muted/30">
       <div className="mx-auto max-w-6xl px-6 py-20 md:py-28">
@@ -41,6 +59,19 @@ export function Testimonials() {
             <p className="mt-4 text-lg text-muted-foreground">{testimonials.subtitle}</p>
           </div>
           <div className="flex gap-2">
+            <button
+              type="button"
+              onClick={toggleAutoplay}
+              aria-label={isPlaying ? "Pausar testimonios" : "Reanudar testimonios"}
+              aria-pressed={!isPlaying}
+              className="grid h-10 w-10 place-items-center rounded-full border transition-colors hover:bg-background"
+            >
+              {isPlaying ? (
+                <Pause className="h-4 w-4" aria-hidden="true" />
+              ) : (
+                <Play className="h-4 w-4" aria-hidden="true" />
+              )}
+            </button>
             <button
               type="button"
               onClick={() => emblaApi?.scrollPrev()}
