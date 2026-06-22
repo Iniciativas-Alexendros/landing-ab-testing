@@ -4,7 +4,9 @@ import { Logo } from "@/components/logo";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { siteConfig } from "@/config/site.config";
 
-/** Cabecera fija con navegación, conmutador de tema y CTA. */
+import { MobileNav } from "./mobile-nav";
+
+/** Cabecera fija con navegación (de escritorio y móvil), tema y CTA. */
 export function Header() {
   const { nav } = siteConfig;
 
@@ -29,9 +31,10 @@ export function Header() {
 
         <div className="flex items-center gap-1">
           <ThemeToggle />
-          <Button asChild size="sm">
+          <Button asChild size="sm" className="hidden md:inline-flex">
             <a href="#lead-form">{nav.ctaLabel}</a>
           </Button>
+          <MobileNav />
         </div>
       </div>
     </header>

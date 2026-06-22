@@ -47,4 +47,21 @@ test.describe("Landing A/B", () => {
     await pause.click();
     await expect(page.getByRole("button", { name: /reanudar testimonios/i })).toBeVisible();
   });
+
+  test("el menú móvil abre, navega y cierra", async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto("/");
+
+    // En móvil la nav de escritorio está oculta: el enlace solo aparece al abrir el menú.
+    await expect(page.getByRole("link", { name: "Precios" })).toHaveCount(0);
+
+    await page.getByRole("button", { name: /abrir menú/i }).click();
+    const link = page.getByRole("link", { name: "Precios" });
+    await expect(link).toBeVisible();
+
+    await link.click();
+    await expect(page.locator("#pricing")).toBeInViewport({ timeout: 5000 });
+    // El panel se cierra tras navegar.
+    await expect(page.getByRole("link", { name: "Precios" })).toHaveCount(0);
+  });
 });
